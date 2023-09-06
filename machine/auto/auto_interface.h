@@ -1,22 +1,21 @@
 /*******************************************************************************
- * @file    App_Main.h
+ * @file    auto_interface.h
  * @author  Abo Drda
- * @date    Sep 2, 2023
+ * @date    Sep 6, 2023
  * @brief   
  ******************************************************************************/
 
-#ifndef APP_MAIN_APP_MAIN_H_
-#define APP_MAIN_APP_MAIN_H_
+#ifndef MACHINE_AUTO_AUTO_INTERFACE_H_
+#define MACHINE_AUTO_AUTO_INTERFACE_H_
 
 /*****************  Includes ********************************/
-#include "../Ecu_Layer/Ecu_Maneger/Maneger.h"
-#include "../machine/manual/interface.h"
-
-/***************** types  ************************/
+#include "../../Ecu_Layer/Ecu_Maneger/Maneger.h"
+#include "../manual/interface.h"
+/***************** EXTERN VARIABLES  ************************/
 
 /*****************  GLOBAL VARIABLES   ***********************/
 
 /*****************  GLOBAL FUNCTIONS   ***********************/
-void App_Init();
+
 #endif
 

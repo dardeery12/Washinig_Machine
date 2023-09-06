@@ -7,7 +7,7 @@
 
 #ifndef TIMER0_TIMER0_H_
 #define TIMER0_TIMER0_H_
-#define portb  *(volatile unsigned char *)0x38
+
 /*****************  Includes ********************************/
 #include "../../Mcal_Common/M_Atmega32_Reg.h"
 

@@ -13,6 +13,7 @@
 #include "Ecu_Cnfg.h"
 
 #include "../../Mcal_Layer/Mcal_Maneger/Mcal_Maneger.h"
+#include"../Ecu_Initialization/Ecu_Init.h"
 
 /***********************************************************/
 #if CHAR_LCD_MODULE_ENABLE   == ENABLE
