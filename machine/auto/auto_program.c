@@ -9,7 +9,6 @@
 /*****************  INCLUDES   *******************************/
 #include "auto_interface.h"
 /***************** EXTERN VARIABLES  *************************/
-extern Machine_Mode_t G_Machine_Current_Mode; /* @ref : manual interface.h */
 
 //extern button_t  Mode_Manual_Btn ;
 //extern button_t  Mode_Auto_Btn;
@@ -59,15 +58,17 @@ extern chr_lcd_4bit_t lcd1;
 /*****************  STATIC VARIABLES   *************************/
 
 /*****************  GLOBAL VARIABLES   *************************/
+
 logic_t G_water_sensor_val = HIGH; /* to read digital i/p of water sensor
  *to enable or disable water motor*/
-uint8 G_Rinse_Minut_Counter ;  /*  to save rinse time minutes counting */
-uint8 G_Rinse_Sec_Counter ;	   /*  to save rinse time minutes counting */
+
 
 Std_ReturnType G_Rinse_Flag_Don   = E_NOK; /* this flag is used to indicate if rinse function  don complelte or not*/
 Std_ReturnType G_Washe_Flag_Don   = E_NOK; /* this flag is used to indicate if rinse function  don complelte or not*/
 Std_ReturnType G_Drin_Flag_Don  	= E_NOK; /* this flag is used to indicate if rinse function  don complelte or not*/
 
+uint8 G_Rinse_Minut_Counter ;  /*  to save rinse time minutes counting */
+uint8 G_Rinse_Sec_Counter ;	   /*  to save rinse time minutes counting */
 
 uint8 G_Wash_Minut_Counter ;  /*  to save wash time minutes counting */
 uint8 G_Wash_Sec_Counter ;	   /*  to save wash time minutes counting */
@@ -75,10 +76,8 @@ uint8 G_Wash_Sec_Counter ;	   /*  to save wash time minutes counting */
 uint8 G_Drain_Minut_Counter ;  /*  to save drain time minutes counting */
 uint8 G_Drain_Sec_Counter ;	   /*  to save drain time minutes counting */
 
-Auto_Machine_Status_t G_Auto_Current_stat = RINSE_STATE; /*to know auto current status */
-
-extern Std_ReturnType G_Motor_Run_Flag ;
-
+//Auto_Machine_Status_t G_Auto_Current_stat = RINSE_STATE; /*to know auto current status */
+Auto_Machine_Status_t G_auto_current_stat = RINSE_STATE;
 
 /*****************  STATIC FUNCTION PROTOTYPES   ***************/
 static void enable_water(void);
@@ -89,7 +88,7 @@ Std_ReturnType water_function();
 
 static void start_motor(void);
 static void stop_motor(void);
-static Std_ReturnType rinse_motor_function();
+Std_ReturnType rinse_motor_function();
 static Std_ReturnType wash_motor_function();
 static Std_ReturnType drain_motor_function();
 
@@ -105,10 +104,10 @@ static void drain_motor_Run();
 static void drain_motor_stop();
 
 /***********************************************************************/
- Std_ReturnType Machine_Rinse_flag_Don   = 5;
- Std_ReturnType Machine_Wash_flag_Don    = 5;
- Std_ReturnType Machine_Drain_flag_Don   = 5;
- Std_ReturnType Machine_Rinse2_flag_Don  = 5;
+Std_ReturnType Machine_Rinse_flag_Don   = E_NOK;
+Std_ReturnType Machine_Wash_flag_Don    = E_NOK;
+Std_ReturnType Machine_Drain_flag_Don   = E_NOK;
+Std_ReturnType Machine_Rinse2_flag_Don  = E_NOK;
 
 Auto_Machine_Status_t slect_auto_stat()
 {
@@ -142,7 +141,7 @@ Auto_Machine_Status_t slect_auto_stat()
 	{
 		if((Machine_Drain_flag_Don == E_NOK) && (Machine_Rinse2_flag_Don == E_NOK))
 		{
-			state = ERROR_STAT;
+			//state = ERROR_STAT;
 		}
 	}
 
@@ -154,49 +153,53 @@ Auto_Machine_Status_t slect_auto_stat()
 /*****************  GLOBAL FUNCTIONS   *************************/
 Std_ReturnType Machine_Auto_Process()
 {
-	static Std_ReturnType Ret = E_NOK;
-	static Auto_Machine_Status_t current_stat = ERROR_STAT;
+	Std_ReturnType Ret = E_NOK;
 	static button_state_t Loc_auto_Btn_Val = BUTTON_RELEASED;
 
 	button_read_state(&Auto_Start_Btn, &Loc_auto_Btn_Val);
-
 	if(BUTTON_PRESSED == Loc_auto_Btn_Val)
 	{
-		current_stat = slect_auto_stat();
-		switch(current_stat)
+		//current_stat = slect_auto_stat();
+		switch(G_auto_current_stat)
 		{
 		case RINSE_STATE:
 			Machine_Rinse_flag_Don = Machine_Rinse();
-			lcd_4bit_send_string_pos(&lcd1,2,1,"rins");
+			if(Machine_Rinse_flag_Don == E_OK)
+			{
+				G_auto_current_stat = WASHING_STATE;
+			}
 			break;
 		case WASHING_STATE:
 			Machine_Wash_flag_Don = Machine_Washing();
-			lcd_4bit_send_string_pos(&lcd1,2,1,"wash");
+			if(Machine_Wash_flag_Don == E_OK)
+			{
+				G_auto_current_stat = RINSE_STATE2;
+			}
 			break;
 		case RINSE_STATE2:
 			Machine_Rinse2_flag_Don = Machine_Rinse();
-			lcd_4bit_send_string_pos(&lcd1,2,1,"rins2");
+			if(E_OK == Machine_Rinse2_flag_Don)
+			{
+				G_auto_current_stat = DRAIN_STATE;
+			}
+
+
 			break;
 		case DRAIN_STATE:
 			Machine_Drain_flag_Don = Machine_Drain();
-			lcd_4bit_send_string_pos(&lcd1,2,1,"drain");
+			if(E_OK == Machine_Drain_flag_Don)
+			{
+				G_auto_current_stat = END_STATE;
+			}
 			break;
-		case END_STATE:
-			lcd_4bit_send_string_pos(&lcd1,2,1,"end");
-			break;
-		default:
-			lcd_4bit_send_string_pos(&lcd1,2,1,"error");
-			break;
-		}
 
+		}
 	}
 	else
 	{
 		/*Do Nothing*/
 	}
-
 	return Ret ;
-
 }
 
 
@@ -204,9 +207,9 @@ Std_ReturnType Machine_Auto_Process()
 
 static Std_ReturnType Machine_Rinse()
 {
-	static Std_ReturnType Ret = E_NOK;
-	static Std_ReturnType Loc_water_flag = E_NOK;  /* remember to change Loc_water_flag to E_NOK*/
-	static Std_ReturnType Loc_motor_flag = E_NOK;
+	Std_ReturnType Ret = E_NOK;
+	Std_ReturnType Loc_water_flag = E_NOK;  /* remember to change Loc_water_flag to E_NOK*/
+	Std_ReturnType Loc_motor_flag = E_NOK;
 	//Std_ReturnType Loc_empty_water_flag = E_OK; /* take care about water flag = E_OK*/
 
 	Loc_water_flag = water_function();
@@ -220,20 +223,19 @@ static Std_ReturnType Machine_Rinse()
 	{
 		empty_water();
 	}
-	if((Loc_water_flag == E_OK) && (Loc_motor_flag == E_OK))
+	if(Loc_motor_flag == E_OK)
 	{
 		Ret = E_OK;
 	}
-	else
+	/*else
 	{
 		Ret = E_NOK;
-	}
+	}*/
 	return Ret;
 }
-
 Std_ReturnType Machine_Washing()
 {
-	static Std_ReturnType Ret = E_NOK;
+	Std_ReturnType Ret = E_NOK;
 	static Std_ReturnType water_flag = E_NOK;
 	static Std_ReturnType wash_flag = E_NOK;
 	static Std_ReturnType empty_flag = E_OK;
@@ -256,8 +258,13 @@ Std_ReturnType Machine_Washing()
 
 static Std_ReturnType Machine_Drain()
 {
-	static Std_ReturnType Ret = E_NOK;
-	Ret = drain_motor_function();
+	Std_ReturnType Ret = E_NOK;
+	Std_ReturnType Loc_drain_flag = E_NOK;
+	Loc_drain_flag = drain_motor_function();
+	if(E_OK == Loc_drain_flag)
+	{
+		Ret = E_OK;
+	}
 	return Ret;
 }
 
@@ -278,39 +285,30 @@ static void stop_motor(void)
 
 }
 
-static Std_ReturnType rinse_motor_function()
+Std_ReturnType rinse_motor_function()
 {
-	static Std_ReturnType Ret = E_NOK;
-	if(E_NOK == G_Rinse_Flag_Don)
+	Std_ReturnType Ret = E_NOK;
+	start_motor();
+	Timer0_Start();
+	Timer0_Calculate_Min_And_Sec(&G_Rinse_Sec_Counter, &G_Rinse_Minut_Counter);
+	if(G_Rinse_Minut_Counter >= RINS_MOTOR_TIME)
 	{
-		start_motor();
-		Timer0_Start();
-		Timer0_Calculate_Min_And_Sec(&G_Rinse_Sec_Counter, &G_Rinse_Minut_Counter);
-		if(G_Rinse_Minut_Counter >= RINS_MOTOR_TIME)
-		{
-
-			stop_motor();
-			Timer0_Stop();
-			G_Rinse_Minut_Counter = 0;
-			G_Rinse_Sec_Counter = 0;
-			G_Rinse_Flag_Don   = E_OK;
-			Ret = E_OK;
-		}
-		else
-		{
-			Ret = E_NOK;
-		}
+		stop_motor();
+		Timer0_Stop();
+		G_Rinse_Minut_Counter = 0;
+		G_Rinse_Sec_Counter = 0;
+		G_Rinse_Flag_Don   = E_OK;
+		Ret = E_OK;
 	}
 	else
 	{
 		/* handle error or done */
 	}
 	return Ret;
-
 }
 static Std_ReturnType wash_motor_function()
 {
-	static Std_ReturnType Ret = E_NOK;
+	Std_ReturnType Ret = E_NOK;
 	if(E_NOK == G_Washe_Flag_Don)
 	{
 		start_motor();
@@ -326,10 +324,10 @@ static Std_ReturnType wash_motor_function()
 			G_Washe_Flag_Don   = E_OK;
 			Ret = E_OK;
 		}
-		else
+		/*else
 		{
 			Ret = E_NOK;
-		}
+		}*/
 	}
 	else
 	{
@@ -343,32 +341,24 @@ static Std_ReturnType wash_motor_function()
 static Std_ReturnType drain_motor_function()
 {
 	fast_speed_enable();
-	static Std_ReturnType Ret = E_NOK;
-	if(E_NOK == G_Washe_Flag_Don)
-	{
-		/* Drain */
-		drain_motor_Run();
-		Timer0_Start();
-		Timer0_Calculate_Min_And_Sec(&G_Drain_Sec_Counter, &G_Drain_Minut_Counter);
-		if(G_Drain_Minut_Counter >= DRAIN_MOTOR_TIME)
-		{
+	Std_ReturnType Ret = E_NOK;
 
-			drain_motor_stop();
-			Timer0_Stop();
-			G_Drain_Minut_Counter = 0;
-			G_Drain_Sec_Counter = 0;
-			G_Drin_Flag_Don   = E_OK;
-			Ret = E_OK;
-		}
-		else
-		{
-			Ret = E_NOK;
-		}
+	/* Drain */
+	drain_motor_Run();
+	Timer0_Start();
+	Timer0_Calculate_Min_And_Sec(&G_Drain_Sec_Counter, &G_Drain_Minut_Counter);
+	if(G_Drain_Minut_Counter >= DRAIN_MOTOR_TIME)
+	{
+		drain_motor_stop();
+		Timer0_Stop();
+		G_Drain_Minut_Counter = 0;
+		G_Drain_Sec_Counter = 0;
+		Ret = E_OK;
 	}
-	else
+	/*else
 	{
 		/* handle error or done */
-	}
+	//}
 	return Ret;
 
 }
@@ -388,7 +378,7 @@ static Std_ReturnType empty_water(void)
 	gpio_pin_write_logic(&R00_WaterEnable, HIGH);
 	/* wait  some time for empty water */
 	gpio_pin_write_logic(&R00_WaterEnable, LOW);
-	return E_OK;
+	return Ret;
 }
 
 
@@ -423,16 +413,38 @@ Std_ReturnType Print_Time(chr_lcd_4bit_t *lcd,uint8 row,uint8 col,uint8 min, uin
 	static uint8 sec_flag = 0;
 	static uint8 min_flag = 120;  /* min_flag = 120 any number it just for flag*/
 
+	if(sec == 0)
+	{
+		lcd_4bit_send_string_pos(&lcd1, row, col+3, "00");
+
+	}
+	if((sec == 0) && (min == 0))
+	{
+		lcd_4bit_send_string_pos(&lcd1, row, col, "00:");
+
+	}
 	if(sec_flag != sec)
 	{
-		lcd_4bit_send_string_pos(&lcd1, row, col+2, ":  ");
-		lcd_4bit_send_num_pos(&lcd1, row, col+3, sec);
+		if(sec<10)
+		{
+			lcd_4bit_send_num_pos(&lcd1, row, col+4, sec);
+		}
+		else
+		{
+			lcd_4bit_send_num_pos(&lcd1, row, col+3, sec);
+		}
 		sec_flag = sec;
 	}
 	if(min_flag != min)
 	{
-		lcd_4bit_send_string_pos(&lcd1, row, col, "  ");
-		lcd_4bit_send_num_pos(&lcd1, row, col, min);
+		if(min<10)
+		{
+			lcd_4bit_send_num_pos(&lcd1, row, col+1, min);
+		}
+		else
+		{
+			lcd_4bit_send_num_pos(&lcd1, row, col, min);
+		}
 		min_flag = min;
 	}
 

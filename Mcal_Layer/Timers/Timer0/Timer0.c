@@ -7,12 +7,17 @@
 
 /*****************  Includes ********************************/
 #include "Timer0.h"
-/***************** static function  ************************/
-volatile uint8 Ovf_Counter =0 ;
-volatile uint8 Sec_Counter =0 ;
-volatile uint8 Min_Counter =0 ;
-/*****************  GLOBAL VARIABLES   ***********************/
+/***************** private global variables  ************************/
+static volatile uint8 Ovf_Counter = 0 ;
+static uint8 sec_Counter = 0 ;
+static uint8 min_Counter = 0 ;
 static Std_ReturnType Timer0_Available_flag = E_OK;
+
+
+/*****************  macros   ***********************/
+#define NUM_OF_OVF_SEC     30
+
+
 /*****************  GLOBAL FUNCTIONS   ***********************/
 
 /*  E_OK  =====> free to use
@@ -43,10 +48,10 @@ void Timer0_Init(void)
 	TIMER0_OFV_INTERRUPT_ENABLE();
 	//TIMSK_reg->OCIE0 =1;
 	//Timer0_Stop();
+	tcnt0 =0x06;
 }
 Std_ReturnType Timer0_Start(void)
 {
-
 	Std_ReturnType Ret = E_NOK;
 	//EXTERNAL_CLCK_SOURCE_RISING_EDGE();
 	PRESCALLER_1024();
@@ -55,55 +60,61 @@ Std_ReturnType Timer0_Start(void)
 }
 Std_ReturnType Timer0_Stop(void)
 {
-	tccr0 = 0;
+	//tccr0 = 0;
 	Std_ReturnType Ret = E_NOK;
 	TIMERO_NO_CLCK();
 	Timer0_Available_flag = E_OK;
+	Timer0_Reset();
 	return Ret;
 
 }
 
+void Timer0_Reset()
+{
+	Ovf_Counter = 0;
+	sec_Counter = 0;
+	min_Counter = 0;
+}
 void Timer0_Calculate_Sec(uint8 * Second)
 {
-	if(61 == Ovf_Counter)
+	if(Ovf_Counter >= NUM_OF_OVF_SEC)
 	{
-		Sec_Counter++;
-		(*Second) = Sec_Counter;
+		sec_Counter++;
+		*Second = sec_Counter;
 		Ovf_Counter = 0;
-
-		if(Sec_Counter == 60)
+		if(sec_Counter >= 60)
 		{
-			Sec_Counter = 0;
+			sec_Counter = 0;
 		}
-
 	}
+}
 
+void Timer0_Calculate_Min(uint8 * min)
+{
+	* min = min_Counter;
+	if(sec_Counter >= 59)
+	{
+		min_Counter++;
+		sec_Counter = 0;
+	}
 }
 void Timer0_Calculate_Min_And_Sec(uint8 * Sec, uint8 * Minuts)
 {
+	Timer0_Calculate_Sec(&sec_Counter);
+	Timer0_Calculate_Min(&min_Counter);
 
-	*Sec = Sec_Counter;
-	*Minuts = Min_Counter;
+	*Minuts = min_Counter;
+	* Sec = sec_Counter;
+	if(min_Counter >= 60)
+	{
+		min_Counter = 0;
+	}
 
 }
 void __vector_11(void)   __attribute__((signal));
 void __vector_11(void)
 {
 	Ovf_Counter++;
+	tcnt0 =0x06;
 	TIMER0_CLEAR_FLAG();
-	if(Ovf_Counter >= 30)
-	{
-		Sec_Counter++;
-		Ovf_Counter =0;
-		if(Sec_Counter >= 60)
-		{
-			Sec_Counter = 0;
-			Min_Counter++;
-			if(Min_Counter >= 60)
-			{
-				Min_Counter = 0;
-			}
-		}
-
-	}
 }

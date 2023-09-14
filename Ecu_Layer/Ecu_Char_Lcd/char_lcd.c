@@ -259,8 +259,9 @@ Std_ReturnType lcd_4bit_send_custom_char(const chr_lcd_4bit_t *lcd, uint8 row, u
 
 Std_ReturnType lcd_4bit_clear(const chr_lcd_4bit_t *lcd)
 {
+	Std_ReturnType Ret = E_OK;
 	lcd_4bit_send_command(lcd, _LCD_CLEAR);
-
+	return Ret;
 }
 
 /**
@@ -533,10 +534,10 @@ static Std_ReturnType lcd_4bit_set_cursor(const chr_lcd_4bit_t *lcd, uint8 row, 
 	Std_ReturnType ret = E_OK;
 	coulmn--;
 	switch(row){
-	case ROW1 : ret = lcd_4bit_send_command(lcd, (0x80 + coulmn)); _delay_ms(100); break;
-	case ROW2 : ret = lcd_4bit_send_command(lcd, (0xC0 + coulmn));  _delay_ms(100); break;
-	case ROW3 : ret = lcd_4bit_send_command(lcd, (0x94 + coulmn)); _delay_ms(100); break;
-	case ROW4 : ret = lcd_4bit_send_command(lcd, (0xD4 + coulmn)); _delay_ms(100); break;
+	case ROW1 : ret = lcd_4bit_send_command(lcd, (0x80 + coulmn));break;
+	case ROW2 : ret = lcd_4bit_send_command(lcd, (0xC0 + coulmn));break;
+	case ROW3 : ret = lcd_4bit_send_command(lcd, (0x94 + coulmn));break;
+	case ROW4 : ret = lcd_4bit_send_command(lcd, (0xD4 + coulmn));break;
 	default : ;
 	}
 	return ret;

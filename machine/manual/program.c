@@ -130,6 +130,8 @@ Std_ReturnType Alarm_Error(void)
 Std_ReturnType Machine_Lcd()
 {
 	Std_ReturnType Ret =E_NOK;
+	uint8 alaqsa = "     Alaqsa      ";
+	lcd_4bit_send_string_pos(&lcd1,1,1,alaqsa);
 	switch (G_Machine_Current_Mode)
 	{
 	case MANUAL_MODE:

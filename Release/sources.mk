@@ -21,6 +21,7 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+App_Main/Machine_Lcd \
 App_Main \
 Ecu_Layer/Ecu_Btn \
 Ecu_Layer/Ecu_Char_Lcd \

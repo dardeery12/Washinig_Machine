@@ -36,6 +36,6 @@ Std_ReturnType Timer0_Stop(void);
 void Timer0_Calculate_Sec(uint8 * Second);
 void Timer0_Calculate_Min_And_Sec(uint8 * Sec, uint8 * Minuts);
 Std_ReturnType Timer0_Check_Available();
-
+void Timer0_Reset();
 #endif
 

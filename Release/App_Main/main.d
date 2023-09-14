@@ -22,7 +22,13 @@ App_Main/main.o App_Main/main.o: ../App_Main/main.c \
   ../App_Main/../Ecu_Layer/Ecu_Maneger/../Ecu_Dc_Motor/motor_dc.h \
   ../App_Main/../Ecu_Layer/Ecu_Maneger/../Ecu_Dc_Motor/../../Mcal_Layer/Mcal_Maneger/Mcal_Maneger.h \
   ../App_Main/../machine/manual/interface.h \
-  ../App_Main/../machine/manual/../../Ecu_Layer/Ecu_Maneger/Maneger.h
+  ../App_Main/../machine/manual/../../Ecu_Layer/Ecu_Maneger/Maneger.h \
+  ../App_Main/../machine/auto/auto_interface.h \
+  ../App_Main/../machine/auto/../../Ecu_Layer/Ecu_Maneger/Maneger.h \
+  ../App_Main/../machine/auto/../manual/interface.h \
+  ../App_Main/Machine_Lcd/Machine_Lcd.h \
+  ../App_Main/Machine_Lcd/../../Ecu_Layer/Ecu_Maneger/Maneger.h \
+  ../App_Main/Machine_Lcd/../../machine/auto/auto_interface.h
 
 ../App_Main/App_Main.h:
 
@@ -73,3 +79,15 @@ App_Main/main.o App_Main/main.o: ../App_Main/main.c \
 ../App_Main/../machine/manual/interface.h:
 
 ../App_Main/../machine/manual/../../Ecu_Layer/Ecu_Maneger/Maneger.h:
+
+../App_Main/../machine/auto/auto_interface.h:
+
+../App_Main/../machine/auto/../../Ecu_Layer/Ecu_Maneger/Maneger.h:
+
+../App_Main/../machine/auto/../manual/interface.h:
+
+../App_Main/Machine_Lcd/Machine_Lcd.h:
+
+../App_Main/Machine_Lcd/../../Ecu_Layer/Ecu_Maneger/Maneger.h:
+
+../App_Main/Machine_Lcd/../../machine/auto/auto_interface.h:

@@ -16,8 +16,7 @@ button_t  btn1 ={.button_pin.port = PORTD,.button_pin.pin = GPIO_PIN3,
 		.button_state = BUTTON_RELEASED,.button_connection = BUTTON_ACTIVE_HIGH};
  */
 
-/*******************************/
-
+/* */
 typedef enum{
     BUTTON_PRESSED = 0,
     BUTTON_RELEASED
