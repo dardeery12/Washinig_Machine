@@ -34,7 +34,11 @@
 #endif
 /***********************************************************/
 #if MOTOR_MODULE_ENABLE == ENABLE
+<<<<<<< HEAD
+#include"../Ecu_Dc_Motor/motor_dc.h"
+=======
 #include"../Ecu_Dc_Motor/dc_motor.h"
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 #endif
 /***********************************************************/
 #if SSD_MODULE_ENABLE == ENABLE

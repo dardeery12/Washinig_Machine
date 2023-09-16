@@ -155,5 +155,11 @@ typedef struct
 #define OCR1AH_reg 	 *(volatile uint8 *)0x4D
 #define OCR1AL_reg	 *(volatile uint8 *)0x4A
 
+#define tccr0	 *(volatile uint8 *)0x53
+<<<<<<< HEAD
+#define tcnt0	 *(volatile uint8 *)0x52
+=======
+
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 #endif
 

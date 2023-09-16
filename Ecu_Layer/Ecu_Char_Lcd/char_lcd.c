@@ -89,6 +89,19 @@ Std_ReturnType lcd_4bit_intialize(const chr_lcd_4bit_t *lcd){
 		ret = lcd_4bit_send_command(lcd, _LCD_4BIT_MODE_2_LINE);
 		ret = lcd_4bit_send_command(lcd, 0x80);
 
+<<<<<<< HEAD
+		//ret = lcd_4bit_send_string(lcd, &string1);
+		Delay_ms(150);
+		//ret = lcd_4bit_send_command(lcd, _LCD_CLEAR);
+
+		//ret = lcd_4bit_send_string(lcd, &string2);
+		Delay_ms(150);
+		//ret = lcd_4bit_send_command(lcd, _LCD_CLEAR);
+
+		//ret = lcd_4bit_send_string(lcd, &string3);
+		Delay_ms(150);
+		//ret = lcd_4bit_send_command(lcd, _LCD_CLEAR);
+=======
 		ret = lcd_4bit_send_string(lcd, &string1);
 		Delay_ms(150);
 		ret = lcd_4bit_send_command(lcd, _LCD_CLEAR);
@@ -100,6 +113,7 @@ Std_ReturnType lcd_4bit_intialize(const chr_lcd_4bit_t *lcd){
 		ret = lcd_4bit_send_string(lcd, &string3);
 		Delay_ms(150);
 		ret = lcd_4bit_send_command(lcd, _LCD_CLEAR);
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 	}
 	return ret;
 }
@@ -259,8 +273,14 @@ Std_ReturnType lcd_4bit_send_custom_char(const chr_lcd_4bit_t *lcd, uint8 row, u
 
 Std_ReturnType lcd_4bit_clear(const chr_lcd_4bit_t *lcd)
 {
+<<<<<<< HEAD
+	Std_ReturnType Ret = E_OK;
+	lcd_4bit_send_command(lcd, _LCD_CLEAR);
+	return Ret;
+=======
 	lcd_4bit_send_command(lcd, _LCD_CLEAR);
 
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 }
 
 /**
@@ -533,10 +553,17 @@ static Std_ReturnType lcd_4bit_set_cursor(const chr_lcd_4bit_t *lcd, uint8 row, 
 	Std_ReturnType ret = E_OK;
 	coulmn--;
 	switch(row){
+<<<<<<< HEAD
+	case ROW1 : ret = lcd_4bit_send_command(lcd, (0x80 + coulmn));break;
+	case ROW2 : ret = lcd_4bit_send_command(lcd, (0xC0 + coulmn));break;
+	case ROW3 : ret = lcd_4bit_send_command(lcd, (0x94 + coulmn));break;
+	case ROW4 : ret = lcd_4bit_send_command(lcd, (0xD4 + coulmn));break;
+=======
 	case ROW1 : ret = lcd_4bit_send_command(lcd, (0x80 + coulmn)); break;
 	case ROW2 : ret = lcd_4bit_send_command(lcd, (0xc0 + coulmn)); break;
 	case ROW3 : ret = lcd_4bit_send_command(lcd, (0x94 + coulmn)); break;
 	case ROW4 : ret = lcd_4bit_send_command(lcd, (0xd4 + coulmn)); break;
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 	default : ;
 	}
 	return ret;

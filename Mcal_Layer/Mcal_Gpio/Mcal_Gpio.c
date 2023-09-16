@@ -208,5 +208,14 @@ Std_ReturnType gpio_port_toggle_logic(port_index_t port)
 	return ret;
 }
 
+<<<<<<< HEAD
+Std_ReturnType gpio_pin_get_status( Gpio_pin_config_t * pin_cnfg)
+{
+	Std_ReturnType ret = E_OK;
+	ret = READ_BIT(ACCESS_REG((pin_cnfg->port) + 2), pin_cnfg->pin);
+	return ret;
+}
+=======
 
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 #endif

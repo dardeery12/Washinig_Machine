@@ -18,8 +18,8 @@
 #include "../Mcal_Interrupt/Mcal_Interrupt_Interface.h"
 #endif
 
-#if TIMER1_ACTIVE   == ENABLE
-#include "../Timers/Timer1/Timer1_Interface.h"
+#if TIMER0_ACTIVE   == ENABLE
+#include "../Timers/Timer0/Timer0.h"
 #endif
 /*
  * #if    == ENABLE

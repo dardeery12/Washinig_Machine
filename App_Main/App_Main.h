@@ -18,5 +18,6 @@
 
 /*****************  GLOBAL FUNCTIONS   ***********************/
 void App_Init();
+void Machine_Process_function(void);
 #endif
 

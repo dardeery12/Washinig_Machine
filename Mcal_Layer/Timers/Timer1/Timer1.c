@@ -52,9 +52,9 @@ Std_ReturnType Timer1_Stop()
 
 	return Ret;
 }
-
-void __vector_9 (void) __attribute__ ((signal)) ;
-void __vector_9 (void)
+/*
+void __vector_10 (void) __attribute__ ((signal)) ;
+void __vector_10 (void)
 {
 	gpio_pin_toggle(&led2);
 	Timer1_Ovf_Counter++;
@@ -68,4 +68,4 @@ void __vector_9 (void)
 
 }
 
-
+*/

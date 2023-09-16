@@ -12,7 +12,7 @@
 
 #define GPIO_MODULE_ACTIVE    				 ENABLE
 #define EXT_INTERRUPT_ACTIVE				 DISABLE
-#define TIMER0_ACTIVE			      		 DISABLE
+#define TIMER0_ACTIVE			      		 ENABLE
 #define TIMER1_ACTIVE				    	 ENABLE
 #define TIMER2_ACTIVE					     DISABLE
 #define UART_COM_PROTOCOL					 DISABLE
