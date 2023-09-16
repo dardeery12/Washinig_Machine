@@ -23,7 +23,10 @@ RM := rm -rf
 -include Ecu_Layer/Ecu_Dc_Motor/subdir.mk
 -include Ecu_Layer/Ecu_Char_Lcd/subdir.mk
 -include Ecu_Layer/Ecu_Btn/subdir.mk
+<<<<<<< HEAD
 -include App_Main/Machine_Lcd/subdir.mk
+=======
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 -include App_Main/subdir.mk
 -include subdir.mk
 -include objects.mk

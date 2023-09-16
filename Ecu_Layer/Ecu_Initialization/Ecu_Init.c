@@ -47,19 +47,34 @@ Gpio_pin_config_t  R01_HeaterEnable = {.port = PORTB, .pin = GPIO_PIN5,
 		.direction = GPIO_PIN_OUTPOT, .logic = LOW};
 /*******************************************************************************/
 /* Rotate_Right_Pin  To Enable Rotate Right */
+<<<<<<< HEAD
 Motor_Cnfg_t  R02_RightMotor = {.motor_pin_config.port = PORTB, .motor_pin_config.pin = GPIO_PIN6};
 
 /*******************************************************************************/
 /* Rotate_Left_Pin  To Enable Rotate Left */
 Motor_Cnfg_t  R03_LeftMotor = {.motor_pin_config.port = PORTB, .motor_pin_config.pin = GPIO_PIN7};
+=======
+Gpio_pin_config_t  R02_RightMotor = {.port = PORTB, .pin = GPIO_PIN6,
+		.direction = GPIO_PIN_OUTPOT, .logic = LOW};
+
+/*******************************************************************************/
+/* Rotate_Left_Pin  To Enable Rotate Left */
+Gpio_pin_config_t  R03_LeftMotor = {.port = PORTB, .pin = GPIO_PIN7,
+		.direction = GPIO_PIN_OUTPOT, .logic = LOW};
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 /*******************************************************************************/
 /* Drain_Pin  To Enable Drain  */
 Gpio_pin_config_t  R04_FastEnable = {.port = PORTD, .pin = GPIO_PIN7,
 		.direction = GPIO_PIN_OUTPOT, .logic = LOW};
 /*******************************************************************************/
 /* Drain_Pin  To Enable Drain  */
+<<<<<<< HEAD
 
 Motor_Cnfg_t  R05_DrainEnable = {.motor_pin_config.port = PORTD, .motor_pin_config.pin = GPIO_PIN4};
+=======
+Gpio_pin_config_t  R05_DrainEnable = {.port = PORTD, .pin = GPIO_PIN4,
+		.direction = GPIO_PIN_OUTPOT, .logic = LOW};
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 /*******************************************************************************/
 /* Man_Drain_Btn  To Read Auto Mode BTN   */
 Gpio_pin_config_t  Door_Lock_Pin ={.port = PORTB, .pin = GPIO_PIN3,
@@ -100,7 +115,11 @@ led_t Led1 = {.port = PORTB,
 
 /*****************  GLOBAL FUNCTIONS   *************************/
 chr_lcd_4bit_t lcd1 ={
+<<<<<<< HEAD
 		.lcd_rs.port = PORTA, .lcd_rs.pin = 1,
+=======
+		.lcd_rs.port = PORTA, .lcd_rs.pin = 0,
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 		.lcd_en.port = PORTA, .lcd_en.pin = 2,
 		.lcd_data[0].port = PORTA,
 		.lcd_data[1].port = PORTA,
@@ -117,8 +136,15 @@ Std_ReturnType Ecu_Init()
 
 	gpio_pin_initialize(&R00_WaterEnable);
 	gpio_pin_initialize(&R01_HeaterEnable);
+<<<<<<< HEAD
 
 	gpio_pin_initialize(&R04_FastEnable);
+=======
+	gpio_pin_initialize(&R02_RightMotor);
+	gpio_pin_initialize(&R03_LeftMotor);
+	gpio_pin_initialize(&R04_FastEnable);
+	gpio_pin_initialize(&R05_DrainEnable);
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 	gpio_pin_initialize(&Door_Lock_Pin);
 	gpio_pin_initialize(&Buzzer);
 	gpio_pin_initialize(&LED);
@@ -137,11 +163,17 @@ Std_ReturnType Ecu_Init()
 
 	lcd_4bit_intialize(&lcd1);
 	Timer0_Init();
+<<<<<<< HEAD
 	Timer0_Stop();
 
 	Motor_Init(&R02_RightMotor);
 	Motor_Init(&R03_LeftMotor);
 	Motor_Init(&R05_DrainEnable);
+=======
+
+
+
+>>>>>>> 1620340d295595eb636486b3db92cf013d0c5ac5
 	return Ret;
 }
 void Print_time_Lcd(void)
