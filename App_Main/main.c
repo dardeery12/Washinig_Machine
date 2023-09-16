@@ -8,17 +8,18 @@
 #include "Machine_Lcd/Machine_Lcd.h"
 
 extern Machine_Mode_t G_Machine_Current_Mode;
-
+extern chr_lcd_4bit_t lcd1;
 
 int main(void)
 {
+
+	Std_ReturnType flag = E_NOK;
 
 	Ecu_Init();
 	Machine_Lcd_Init();
 	while(1)
 	{
-
-
+		//Machine_Manual_Process();
 		Machine_Process_function();
 		Machine_Lcd_Updat();
 	}
@@ -42,7 +43,10 @@ int main(void)
 
 void Machine_Process_function(void)
 {
-	Machine_Select_Mode();
+	if(G_Machine_Current_Mode == ERROR_CHOOSE_MODE)
+	{
+		Machine_Select_Mode();
+	}
 	switch(G_Machine_Current_Mode)
 	{
 	case AUTO_MODE:
@@ -51,12 +55,10 @@ void Machine_Process_function(void)
 	case MANUAL_MODE:
 		Machine_Manual_Process();
 		break;
-	case STOP_MODE:
-		//Machine_Auto_Process();
-		break;
 	case ERROR_CHOOSE_MODE:
-		//Machine_Auto_Process();
+
 		break;
+
 
 	}
 }

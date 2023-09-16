@@ -20,7 +20,6 @@ typedef enum
 {
 	AUTO_MODE,
 	MANUAL_MODE,
-	STOP_MODE,
 	ERROR_CHOOSE_MODE
 }Machine_Mode_t;
 
@@ -32,7 +31,7 @@ typedef enum
 	RIGHT_ROTAT_BTN,
 	LEFT_ROTAT_BTN,
 	DOOR_LOCK,
-	ERROR_CHOOSE,
+	ERROR_MAN_CHOOSE,
 }Manual_Btn_Select_t;
 /*****************  GLOBAL VARIABLES   ***********************/
 /*****************  global function   ***********************/

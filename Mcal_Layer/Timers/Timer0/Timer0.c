@@ -111,6 +111,29 @@ void Timer0_Calculate_Min_And_Sec(uint8 * Sec, uint8 * Minuts)
 	}
 
 }
+
+
+Std_ReturnType Timr0_Time_Out(uint8 min, uint8 sec)
+{
+	Std_ReturnType Ret = E_NOK;
+	static uint8 Loc_min = 0;
+	static uint8 Loc_sec = 0;
+	//Timer0_Reset();
+	//Timer0_Start();
+	Timer0_Calculate_Min_And_Sec(&Loc_sec, &Loc_min);
+	if((min == Loc_min) && (sec == Loc_sec))
+	{
+		Timer0_Stop();
+		Loc_min = 0;
+		Loc_sec = 0;
+		Ret = E_OK;
+	}
+	return Ret;
+}
+void Timr0_Time_Out_Stop()
+{
+	Timer0_Stop();
+}
 void __vector_11(void)   __attribute__((signal));
 void __vector_11(void)
 {

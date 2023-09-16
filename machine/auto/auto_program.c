@@ -33,9 +33,11 @@ extern Gpio_pin_config_t  Water_Level_Pin;
 
 /*  to run motor the G_Motor_Run_Flag must be = E_OK
  * and to stop motor the G_Motor_Run_Flag must be = E_NOK*/
-extern Std_ReturnType G_Motor_Run_Flag;
+//extern Std_ReturnType G_Motor_Run_Flag;
 //extern Std_ReturnType Timer0_Busy_flag;
 extern chr_lcd_4bit_t lcd1;
+
+extern Machine_Mode_t G_Machine_Current_Mode;
 /***************** PRIVATE MACROS AND DEFINES  ****************/
 /* washing time as required*/
 #define WASHING_TIME_MINUTS         5
@@ -58,6 +60,8 @@ extern chr_lcd_4bit_t lcd1;
 /*****************  STATIC VARIABLES   *************************/
 
 /*****************  GLOBAL VARIABLES   *************************/
+
+button_state_t G_auto_start_btn_stat = BUTTON_RELEASED; /* to save if auto start  btn status*/
 
 logic_t G_water_sensor_val = HIGH; /* to read digital i/p of water sensor
  *to enable or disable water motor*/
@@ -154,10 +158,11 @@ Auto_Machine_Status_t slect_auto_stat()
 Std_ReturnType Machine_Auto_Process()
 {
 	Std_ReturnType Ret = E_NOK;
-	static button_state_t Loc_auto_Btn_Val = BUTTON_RELEASED;
-
-	button_read_state(&Auto_Start_Btn, &Loc_auto_Btn_Val);
-	if(BUTTON_PRESSED == Loc_auto_Btn_Val)
+	if(G_auto_start_btn_stat == BUTTON_RELEASED)
+	{
+		button_read_state(&Auto_Start_Btn, &G_auto_start_btn_stat);
+	}
+	if(BUTTON_PRESSED == G_auto_start_btn_stat)
 	{
 		//current_stat = slect_auto_stat();
 		switch(G_auto_current_stat)
@@ -182,8 +187,6 @@ Std_ReturnType Machine_Auto_Process()
 			{
 				G_auto_current_stat = DRAIN_STATE;
 			}
-
-
 			break;
 		case DRAIN_STATE:
 			Machine_Drain_flag_Don = Machine_Drain();
@@ -192,13 +195,16 @@ Std_ReturnType Machine_Auto_Process()
 				G_auto_current_stat = END_STATE;
 			}
 			break;
-
+		case END_STATE:
+			G_Machine_Current_Mode = ERROR_CHOOSE_MODE;
+			break;
 		}
 	}
 	else
 	{
 		/*Do Nothing*/
 	}
+
 	return Ret ;
 }
 
